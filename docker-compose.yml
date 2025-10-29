@@ -2,7 +2,7 @@ services:
   aerekos_redis:
     image: redis:7.4.1-alpine
     ports:
-      - "${REDIS_PORT}:6379"
+      - "6379:6379"
     volumes:
       - ./redis_data:/data
     env_file:
@@ -13,7 +13,7 @@ services:
   aerekos_postgres:
     image: postgres:16.2-alpine
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "5432:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     env_file:
