@@ -1,25 +1,52 @@
 services:
-  aerekos_redis:
-    image: redis:7.4.1-alpine
+  aerekos-redis-cache:
+    image: redis:7.0.15
+    container_name: aerekos-redis-cache
+    env_file:
+      - .env
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
       - "6379:6379"
     volumes:
-      - ./redis_data:/data
-    env_file:
-      - .env
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
-    restart: always
+      - redis-cache-data:/data
+    # networks:
+    #   - aerekos-net
+    restart: unless-stopped
 
-  aerekos_postgres:
-    image: postgres:16.2-alpine
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
+  aerekos-redis-queue:
+    image: redis:7.0.15
+    container_name: aerekos-redis-queue
     env_file:
       - .env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    restart: always
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis-queue-data:/data
+    # networks:
+    #   - aerekos-net
+    restart: unless-stopped
+  aerekos-neo4j:
+    image: neo4j:2025.04.0
+    container_name: aerekos-neo4j
+    env_file:
+      - .env
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4jdata:/data
+      - neo4jlogs:/logs
+    # networks:
+    #   - aerekos-net
+    restart: unless-stopped
+
+volumes:
+  neo4jdata:
+  neo4jlogs:
+  redis-cache-data:
+  redis-queue-data:
+
+# networks:
+#   aerekos-net:
+#     external: true

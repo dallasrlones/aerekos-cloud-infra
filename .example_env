@@ -1,6 +1,2 @@
 REDIS_PASSWORD=aerekos_redis_password_change_me
-REDIS_PORT=6666
-POSTGRES_USER=aerekos_user
-POSTGRES_PASSWORD=aerekos_pg_password_change_me
-POSTGRES_DB=arekos_cloud
-POSTGRES_PORT=5555
+NEO4J_AUTH=neo4j/aerekos_neo4j_password_change_me
